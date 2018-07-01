@@ -21,8 +21,7 @@ class _MyAppState extends State<MyApp> {
         _loginStatus = status;
       });
     } on PlatformException catch(e) {
-      debugPrint("PlatformException");
-      debugPrint("code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
+      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
       setState(() {
         _loginStatus = "code: ${e.code}, message: ${e.message}";
       });
@@ -38,8 +37,22 @@ class _MyAppState extends State<MyApp> {
         _loginStatus = profile.firstName;
       });
     } on PlatformException catch(e) {
-      debugPrint("PlatformException");
-      debugPrint("code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
+      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
+      setState(() {
+        _loginStatus = "code: ${e.code}, message: ${e.message}";
+      });
+    }
+  }
+
+  _clearSession() async {
+    try {
+      String status = await FlutterLinkedinLogin.clearSession;
+      debugPrint("logout status: $status");
+      setState(() {
+        _loginStatus = status;
+      });
+    } on PlatformException catch(e) {
+      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
       setState(() {
         _loginStatus = "code: ${e.code}, message: ${e.message}";
       });
@@ -54,7 +67,7 @@ class _MyAppState extends State<MyApp> {
           title: new Text('LinkedIn Login Plugin Example'),
         ),
         body: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new Text('Login status: $_loginStatus\n'),
@@ -65,6 +78,10 @@ class _MyAppState extends State<MyApp> {
             new RaisedButton(
               onPressed: _getProfile,
               child: new Text("Get Profile"),
+            ),
+            new RaisedButton(
+              onPressed: _clearSession,
+              child: new Text("Clear Session"),
             )
           ]
         ),

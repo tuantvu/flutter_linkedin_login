@@ -3,6 +3,7 @@ package io.tuantvu.flutterlinkedinlogin
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import com.linkedin.platform.LISessionManager
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -13,7 +14,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
  * FlutterLinkedInLoginPlugin delegates the call to LinkedIn to LinkedInActivity due to the
  * need to override onActivityResult.
  * Method channel name: "flutter_linkedin_login".
- * Call methods: "logIntoLinkedIn" and "getLinkedInProfile".
+ * Call methods: "logIntoLinkedIn", "getLinkedInProfile", "clearSession".
  */
 class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCallHandler {
 
@@ -34,21 +35,48 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
   }
 
   /**
-   * For logIntoLinkedIn, delegates work to LinkedInActivity or GetLinkedInProfileActivity
+   * Determines which functionality to call
    */
   override fun onMethodCall(call: MethodCall, result: Result): Unit {
-    if (call.method == "logIntoLinkedIn") run {
-      Log.d(TAG, "logIntoLinkedIn: starting LinkedInActivity")
-      val linkedInActivityIntent = Intent(mainActivity, LinkedInActivity::class.java)
-      Companion.result = result
-      mainActivity.startActivity(linkedInActivityIntent)
-    } else if(call.method == "getProfile") {
-      Log.d(TAG, "getProfile: starting GetLinkedInProfileActivity")
-      val getLinkedInProfileActivity = Intent(mainActivity, GetLinkedInProfileActivity::class.java)
-      Companion.result = result
-      mainActivity.startActivity(getLinkedInProfileActivity)
+    when {
+      call.method == "logIntoLinkedIn" -> logIntoLinkedIn(result)
+      call.method == "getProfile" -> getProfile(result)
+      call.method =="clearSession" -> clearSession(result)
+      else -> result.notImplemented()
+    }
+  }
+
+  /**
+   * Starts LinkedInActivity to log in
+   */
+  private fun logIntoLinkedIn(result: Result) {
+    Log.d(TAG, "logIntoLinkedIn: starting LinkedInActivity")
+    val linkedInActivityIntent = Intent(mainActivity, LinkedInActivity::class.java)
+    Companion.result = result
+    mainActivity.startActivity(linkedInActivityIntent)
+  }
+
+  /**
+   * Starts GetLinkedProfileActivity to get profile
+   */
+  private fun getProfile(result: Result) {
+    Log.d(TAG, "getProfile: starting GetLinkedInProfileActivity")
+    val getLinkedInProfileActivity = Intent(mainActivity, GetLinkedInProfileActivity::class.java)
+    Companion.result = result
+    mainActivity.startActivity(getLinkedInProfileActivity)
+  }
+
+  /**
+   * Clears the access token from session
+   */
+  private fun clearSession(result: Result) {
+    Log.d(TAG, "clearSession")
+    val sessionManager = LISessionManager.getInstance(mainActivity.applicationContext)
+    if (sessionManager.session.accessToken == null) {
+      result.success("No session")
     } else {
-      result.notImplemented()
+      sessionManager.clearSession()
+      result.success("Cleared session")
     }
   }
 }

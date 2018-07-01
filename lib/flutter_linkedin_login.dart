@@ -3,12 +3,17 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+///Helper class to call platform channels for LinkedIn APIs
 class FlutterLinkedinLogin {
   static const MethodChannel _channel =
       const MethodChannel('io.tuantvu.flutterlinkedinlogin/flutter_linkedin_login');
 
   static Future<String> get login async {
     return await _channel.invokeMethod('logIntoLinkedIn');
+  }
+
+  static Future<String> get clearSession async {
+    return await _channel.invokeMethod("clearSession");
   }
 
   static Future<LinkedInProfile> get profile async {

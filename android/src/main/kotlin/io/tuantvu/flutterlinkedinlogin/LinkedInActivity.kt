@@ -33,7 +33,7 @@ class LinkedInActivity : Activity() {
         object : AuthListener {
           override fun onAuthSuccess() {
             Log.i(FlutterLinkedinLoginPlugin.TAG, "onAuthSuccess")
-            result.success("SUCCESS")
+            result.success("Logged in")
             activity.finish()
           }
 
