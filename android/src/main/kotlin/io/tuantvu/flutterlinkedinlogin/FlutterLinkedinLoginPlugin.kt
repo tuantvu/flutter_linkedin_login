@@ -47,13 +47,21 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
   }
 
   /**
-   * Starts LinkedInActivity to log in
+   * Checks to see if the access token is still valid. If so, inits the session with
+   * the token. If not, then starts LinkedInActivity to log in
    */
   private fun logIntoLinkedIn(result: Result) {
-    Log.d(TAG, "logIntoLinkedIn: starting LinkedInActivity")
-    val linkedInActivityIntent = Intent(mainActivity, LinkedInActivity::class.java)
-    Companion.result = result
-    mainActivity.startActivity(linkedInActivityIntent)
+    val sessionManager = LISessionManager.getInstance(mainActivity.applicationContext)
+    if (sessionManager.session.isValid) {
+      Log.d(TAG, "logIntoLinkedIn: Access token still valid")
+      sessionManager.init(sessionManager.session.accessToken)
+      result.success("Access token still valid")
+    } else {
+      Log.d(TAG, "logIntoLinkedIn: starting LinkedInActivity")
+      val linkedInActivityIntent = Intent(mainActivity, LinkedInActivity::class.java)
+      Companion.result = result
+      mainActivity.startActivity(linkedInActivityIntent)
+    }
   }
 
   /**
