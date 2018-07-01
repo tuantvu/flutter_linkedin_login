@@ -32,9 +32,10 @@ class _MyAppState extends State<MyApp> {
   _getProfile() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      String status = await FlutterLinkedinLogin.profile;
+      LinkedInProfile profile = await FlutterLinkedinLogin.profile;
+      debugPrint("profile: $profile");
       setState(() {
-        _loginStatus = status;
+        _loginStatus = profile.firstName;
       });
     } on PlatformException catch(e) {
       debugPrint("PlatformException");

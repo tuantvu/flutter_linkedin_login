@@ -3,10 +3,10 @@ package io.tuantvu.flutterlinkedinlogin
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /**
@@ -27,13 +27,14 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
 
     @JvmStatic
     fun registerWith(registrar: Registrar): Unit {
-      val channel = MethodChannel(registrar.messenger(), "io.tuantvu.flutterlinkedinlogin/flutter_linkedin_login")
+      val channel = MethodChannel(registrar.messenger(),
+          "io.tuantvu.flutterlinkedinlogin/flutter_linkedin_login")
       channel.setMethodCallHandler(FlutterLinkedinLoginPlugin(registrar.activity()))
     }
   }
 
   /**
-   * For logIntoLinkedIn, delegates work to LinkedInActivity
+   * For logIntoLinkedIn, delegates work to LinkedInActivity or GetLinkedInProfileActivity
    */
   override fun onMethodCall(call: MethodCall, result: Result): Unit {
     if (call.method == "logIntoLinkedIn") run {
