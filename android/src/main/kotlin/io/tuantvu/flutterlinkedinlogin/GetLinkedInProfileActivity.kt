@@ -31,7 +31,12 @@ class GetLinkedInProfileActivity : Activity() {
 
       override fun onApiError(error: LIApiError) {
         Log.e(FlutterLinkedinLoginPlugin.TAG, error.toString())
-        result.error(error.errorType.name, error.message, null)
+        //Set access token is not set error type to http status code of unauthorized
+        val httpStatus = if (error.errorType == LIApiError.ErrorType.accessTokenIsNotSet) 401 else error.httpStatusCode
+
+        //If apiErrorResponse type, then get the message from the apiErrorResponse
+        val message = error.apiErrorResponse?.message ?: error.message
+        result.error(httpStatus.toString(), message, error.toString())
         activity.finish()
       }
     })

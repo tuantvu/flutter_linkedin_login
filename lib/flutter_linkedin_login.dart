@@ -30,7 +30,6 @@ class LinkedInProfile {
   String id;
   String pictureUrl;
   String summary;
-  String title;
   String industry;
 
   LinkedInProfile.fromJson(Map json) {
