@@ -33,10 +33,9 @@ class GetLinkedInProfileActivity : Activity() {
 
       override fun onApiError(error: LIApiError) {
         Log.e(FlutterLinkedinLoginPlugin.TAG, error.toString())
-        val jsonObject = JSONObject(error.toString())
-        val errorCode = if (jsonObject.has("errorCode")) jsonObject.getString("errorCode") else null
-        val errorMessage = if (jsonObject.has("errorMessage"))  jsonObject.getString("errorMessage") else null
-        result.error(errorCode, errorMessage, null)
+//        val errorCode = error.apiErrorResponse.errorCode.toString()
+//        val errorMessage = error.apiErrorResponse.message
+        result.error(error.errorType.name, error.message, null)
         activity.finish()
       }
     })
