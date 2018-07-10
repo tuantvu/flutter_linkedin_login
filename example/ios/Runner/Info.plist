@@ -2,6 +2,28 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+        <string>fetch</string>
+    </array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>linkedin</string>
+		<string>linkedin-sdk2</string>
+		<string>linkedin-sdk</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>li4877094</string>
+			</array>
+		</dict>
+	</array>
+	<key>LIAppId</key>
+	<string>4877094</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

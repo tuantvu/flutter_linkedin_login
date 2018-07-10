@@ -16,6 +16,12 @@ A new flutter plugin project.
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
+
+  s.preserve_paths = 'linkedin-sdk.framework'
+  s.xcconfig = { 'OTHER_LDFLAGS' => '-framework linkedin-sdk' }
+  s.frameworks = 'linkedin-sdk'
+  s.xcconfig = { 'HEADER_SEARCH_PATHS' => '/Users/gigivu/IdeaProjects/flutter_linkedin_login/ios/linkedin-sdk.framework' }
+  s.vendored_frameworks = 'linkedin-sdk.framework'
 end
 

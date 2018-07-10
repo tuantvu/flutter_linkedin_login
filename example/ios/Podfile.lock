@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_linkedin_login (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Pods/.symlinks/flutter/ios`)
+  - flutter_linkedin_login (from `Pods/.symlinks/plugins/flutter_linkedin_login/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Pods/.symlinks/flutter/ios
+  flutter_linkedin_login:
+    :path: Pods/.symlinks/plugins/flutter_linkedin_login/ios
+
+SPEC CHECKSUMS:
+  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  flutter_linkedin_login: 99e2f00f1e1e219d1c2f69c7c7b3106cfc811284
+
+PODFILE CHECKSUM: bd36bd9d5cc71b083abe4cde75a3444132dab73a
+
+COCOAPODS: 1.5.2
