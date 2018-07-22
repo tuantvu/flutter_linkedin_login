@@ -2,8 +2,6 @@
 
 A Flutter plugin for [Sign in with LinkedIn](https://developer.linkedin.com/docs/signin-with-linkedin)
 
-*Note*: Only Android is currently supported. iOS support pending
-
 ## Installation
 See the [installation instructions on pub](https://pub.dartlang.org/packages/flutter_linkedin_login#-installing-tab-)
 
@@ -40,6 +38,8 @@ Follow the "Associate your iOS app with your LinkedIn app" section of LinkedIn's
 Open your AppDelegate in your ios/Runner directory and add the following function
 ```
 //swift
+//add #import <flutter_linkedin_login/FlutterLinkedinLoginPlugin.h>
+//to your Running-Bridging-Header.h file
 override func application(_ app: UIApplication, open: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
     if (FlutterLinkedinLoginPlugin.shouldHandle(open)) {
         return FlutterLinkedinLoginPlugin.application(app, open: open, sourceApplication: nil, annotation: nil)
@@ -49,6 +49,7 @@ override func application(_ app: UIApplication, open: URL, options: [UIApplicati
 ```
 ```objectivec
 //objective-c
+//add #import <flutter_linkedin_login/FlutterLinkedinLoginPlugin.h> at top of your AppDelegate.m
 - (BOOL)application:(UIApplication *)application open:(NSURL *)open options:(UIApplicationOpenURLOptionsKey *)options {
     if ([FlutterLinkedinLoginPlugin shouldHandleUrl:url]) {
         return [FlutterLinkedinLoginPlugin application:application open:open sourceApplication:nil annotation: nil];

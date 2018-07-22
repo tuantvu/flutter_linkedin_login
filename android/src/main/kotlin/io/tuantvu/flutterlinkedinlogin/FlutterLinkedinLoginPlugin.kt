@@ -22,7 +22,7 @@ import org.json.JSONObject
  * FlutterLinkedInLoginPlugin handles login, clearing session, and getting basic user
  * profile from LinkedIn. Clients must override onActivityResult in their MainActivity and
  * pass the parameters to FlutterLinkedInLoginPlugin.onActivityResult.
- * Method channel name: "flutter_linkedin_login".
+ * Method channel name: "io.tuantvu.flutterlinkedinlogin/flutter_linkedin_login".
  * Call methods: "logIntoLinkedIn", "getLinkedInProfile", "clearSession".
  */
 class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCallHandler {
