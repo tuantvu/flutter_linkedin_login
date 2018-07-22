@@ -8,11 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for iOS
 
-### Fix
-- Android LinkedInActivity disables all input if user required 
-to download LinkedIn from AppStore
+## 0.1.1 - 2018-07-22
+### Changed
+- Android MainActivity must override onActivityResult
 
 ## 0.0.1 - 2018-07-04
 ### Added
-- Initial Release
 - Support for Android

@@ -15,7 +15,7 @@ For the debug key hash value generation, remember to use 'android' as your passw
 Click *update* after adding your package and key in 
 LinkedIn's developer console for your changes to take.  
   
-Open you MainActivity in your Android app/src/main/ directory and override the
+Open your MainActivity in your Android app/src/main/ directory and override the
 onActivityResult method with the following
 ```kotlin
 //kotlin
