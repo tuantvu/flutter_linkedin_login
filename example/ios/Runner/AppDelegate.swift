@@ -29,10 +29,7 @@ import os
     
     override func application(_ app: UIApplication, open: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         if (FlutterLinkedinLoginPlugin.shouldHandle(open)) {
-            return FlutterLinkedinLoginPlugin.application(app,
-                                                          open: open,
-                                                          sourceApplication: nil,
-                                                          annotation: nil)
+            return FlutterLinkedinLoginPlugin.application(app, open: open, sourceApplication: nil, annotation: nil)
         }
         return true
     }

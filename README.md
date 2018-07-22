@@ -42,10 +42,7 @@ Open your AppDelegate in your ios/Runner directory and add the following functio
 //swift
 override func application(_ app: UIApplication, open: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
     if (FlutterLinkedinLoginPlugin.shouldHandle(open)) {
-        return FlutterLinkedinLoginPlugin.application(app,
-                                                      open: open,
-                                                      sourceApplication: nil,
-                                                      annotation: nil)
+        return FlutterLinkedinLoginPlugin.application(app, open: open, sourceApplication: nil, annotation: nil)
     }
     return true
 }
@@ -54,7 +51,7 @@ override func application(_ app: UIApplication, open: URL, options: [UIApplicati
 //objective-c
 - (BOOL)application:(UIApplication *)application open:(NSURL *)open options:(UIApplicationOpenURLOptionsKey *)options {
     if ([FlutterLinkedinLoginPlugin shouldHandleUrl:url]) {
-        return [FlutterLinkedinLoginPlugin application:application open:open options:options];
+        return [FlutterLinkedinLoginPlugin application:application open:open sourceApplication:nil annotation: nil];
     }
     return YES;
 }
