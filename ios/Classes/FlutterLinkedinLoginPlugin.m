@@ -1,5 +1,6 @@
 #import "FlutterLinkedinLoginPlugin.h"
 #import <flutter_linkedin_login/flutter_linkedin_login-Swift.h>
+#import <linkedin-sdk/LISDK.h>
 
 NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,industry,summary,picture-url)?format=json";
 
@@ -60,7 +61,7 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
     NSLog(@"getting profile");
     [[LISDKAPIHelper sharedInstance] getRequest:URL
         success:^(LISDKAPIResponse *response) {
-            NSLog(@"data: %@, code: %@", response.data, response.statusCode);
+            NSLog(@"data: %@, code: %d", response.data, response.statusCode);
             result(response.data);
         }
         error:^(LISDKAPIError *error) {
@@ -88,4 +89,16 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
         result(@"No session");
     }
 }
+
+//Handles openURL callback to this app when LinkedIn App returns any response to this app
++ (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    
+    NSLog(@"%s","onOpenURL called!");
+    
+    if ([LISDKCallbackHandler shouldHandleUrl:url]) {
+        return [LISDKCallbackHandler application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+    }
+    return YES;
+}
+
 @end

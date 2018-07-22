@@ -3,20 +3,32 @@ package io.tuantvu.flutterlinkedinlogin
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
+import com.linkedin.platform.APIHelper
 import com.linkedin.platform.LISessionManager
+import com.linkedin.platform.errors.LIApiError
+import com.linkedin.platform.errors.LIAuthError
+import com.linkedin.platform.listeners.ApiListener
+import com.linkedin.platform.listeners.ApiResponse
+import com.linkedin.platform.listeners.AuthListener
+import com.linkedin.platform.utils.Scope
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import org.json.JSONObject
 
 /**
- * FlutterLinkedInLoginPlugin delegates the call to LinkedIn to LinkedInActivity due to the
- * need to override onActivityResult.
+ * FlutterLinkedInLoginPlugin handles login, clearing session, and getting basic user
+ * profile from LinkedIn. Clients must override onActivityResult in their MainActivity and
+ * pass the parameters to FlutterLinkedInLoginPlugin.onActivityResult.
  * Method channel name: "flutter_linkedin_login".
  * Call methods: "logIntoLinkedIn", "getLinkedInProfile", "clearSession".
  */
 class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCallHandler {
+
+  private val URL = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name," +
+      "headline,industry,summary,picture-url)?format=json"
 
   companion object {
     //Result could not be passed around as a Parcelable or Serializable, so using a global static reference
@@ -27,10 +39,20 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
     val TAG = "FlutterLinkedInPlugin" //Tag for logging
 
     @JvmStatic
-    fun registerWith(registrar: Registrar): Unit {
+    fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(),
           "io.tuantvu.flutterlinkedinlogin/flutter_linkedin_login")
       channel.setMethodCallHandler(FlutterLinkedinLoginPlugin(registrar.activity()))
+    }
+
+    /**
+     * Calls LISessionManager's onActivityResult
+     */
+    @JvmStatic
+    fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) {
+      Log.d(FlutterLinkedinLoginPlugin.TAG, "GetLinkedInProfileActivity.onActivityResult")
+      LISessionManager.getInstance(activity.applicationContext).onActivityResult(activity,
+          requestCode, resultCode, data)
     }
   }
 
@@ -48,7 +70,7 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
 
   /**
    * Checks to see if the access token is still valid. If so, inits the session with
-   * the token. If not, then starts LinkedInActivity to log in
+   * the token. If not, then starts the login process
    */
   private fun logIntoLinkedIn(result: Result) {
     val sessionManager = LISessionManager.getInstance(mainActivity.applicationContext)
@@ -58,20 +80,51 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
       result.success("Access token still valid")
     } else {
       Log.d(TAG, "logIntoLinkedIn: starting LinkedInActivity")
-      val linkedInActivityIntent = Intent(mainActivity, LinkedInActivity::class.java)
-      Companion.result = result
-      mainActivity.startActivity(linkedInActivityIntent)
+      LISessionManager.getInstance(mainActivity.applicationContext).init(
+          mainActivity,
+          Scope.build(Scope.R_BASICPROFILE, Scope.R_EMAILADDRESS),
+          object : AuthListener {
+            override fun onAuthSuccess() {
+              Log.i(FlutterLinkedinLoginPlugin.TAG, "onAuthSuccess")
+              result.success("Logged in")
+            }
+
+            override fun onAuthError(error: LIAuthError) {
+              Log.e(FlutterLinkedinLoginPlugin.TAG, "onAuthError: " + error.toString())
+              //LIAuthError doesn't expose individual fields so reading its toString as JSON
+              val jsonObject = JSONObject(error.toString())
+              val errorCode = if (jsonObject.has("errorCode")) jsonObject.getString("errorCode") else null
+              val errorMessage = if (jsonObject.has("errorMessage"))  jsonObject.getString("errorMessage") else null
+              result.error(errorCode, errorMessage, null)
+            }
+          },
+          true
+      )
     }
   }
 
   /**
-   * Starts GetLinkedProfileActivity to get profile
+   * Gets basic profile
    */
   private fun getProfile(result: Result) {
     Log.d(TAG, "getProfile: starting GetLinkedInProfileActivity")
-    val getLinkedInProfileActivity = Intent(mainActivity, GetLinkedInProfileActivity::class.java)
-    Companion.result = result
-    mainActivity.startActivity(getLinkedInProfileActivity)
+    APIHelper.getInstance(mainActivity.applicationContext).getRequest(mainActivity, URL, object : ApiListener {
+      override fun onApiSuccess(apiResponse: ApiResponse) {
+        Log.d(FlutterLinkedinLoginPlugin.TAG, apiResponse.toString())
+        val response = apiResponse.responseDataAsJson
+        result.success(response.toString())
+      }
+
+      override fun onApiError(error: LIApiError) {
+        Log.e(FlutterLinkedinLoginPlugin.TAG, error.toString())
+        //Set access token is not set error type to http status code of unauthorized
+        val httpStatus = if (error.errorType == LIApiError.ErrorType.accessTokenIsNotSet) 401 else error.httpStatusCode
+
+        //If apiErrorResponse type, then get the message from the apiErrorResponse
+        val message = error.apiErrorResponse?.message ?: error.message
+        result.error(httpStatus.toString(), message, error.toString())
+      }
+    })
   }
 
   /**
@@ -87,4 +140,6 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
       result.success("Cleared session")
     }
   }
+
+
 }

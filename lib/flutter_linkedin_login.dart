@@ -47,6 +47,4 @@ class LinkedInProfile {
     return "id: $id, firstName: $firstName, lastName: $lastName, headline: $headline,"
         " pictureUrl: $pictureUrl, industry: $industry, summary: $summary";
   }
-
-
 }

@@ -13,8 +13,25 @@ Follow the "Associate your Android app with your LinkedIn app" section of Linked
 Find your package name in the android/app/src/main/AndroidManifest.xml file.
 For the debug key hash value generation, remember to use 'android' as your password.
 Click *update* after adding your package and key in 
-LinkedIn's developer console for your changes to take.
-
+LinkedIn's developer console for your changes to take.  
+  
+Open you MainActivity in your Android app/src/main/ directory and override the
+onActivityResult method with the following
+```kotlin
+//kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+  FlutterLinkedinLoginPlugin.onActivityResult(this, requestCode, resultCode, data)
+  super.onActivityResult(requestCode, resultCode, data)
+}
+```
+```java
+//java
+@Override
+public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  FlutterLinkedinLoginPlugin.onActivityResult(this, requestCode, resultCode, data);
+  super.onActivityResult(requestCode, resultCode, data);
+}
+```
 
 ### iOS
 - *Coming Soon*
