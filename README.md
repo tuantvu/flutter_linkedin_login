@@ -34,7 +34,31 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ### iOS
-- *Coming Soon*
+Follow the "Associate your iOS app with your LinkedIn app" section of LinkedIn's
+[Getting started with iOS](https://developer.linkedin.com/docs/ios-sdk). 
+  
+Open your AppDelegate in your ios/Runner directory and add the following function
+```
+//swift
+override func application(_ app: UIApplication, open: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    if (FlutterLinkedinLoginPlugin.shouldHandle(open)) {
+        return FlutterLinkedinLoginPlugin.application(app,
+                                                      open: open,
+                                                      sourceApplication: nil,
+                                                      annotation: nil)
+    }
+    return true
+}
+```
+```objectivec
+//objective-c
+- (BOOL)application:(UIApplication *)application open:(NSURL *)open options:(UIApplicationOpenURLOptionsKey *)options {
+    if ([FlutterLinkedinLoginPlugin shouldHandleUrl:url]) {
+        return [FlutterLinkedinLoginPlugin application:application open:open options:options];
+    }
+    return YES;
+}
+```
 
 ## Usage
 ### Signing in

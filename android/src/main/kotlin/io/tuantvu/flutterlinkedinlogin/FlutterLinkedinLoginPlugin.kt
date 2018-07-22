@@ -108,23 +108,28 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
    */
   private fun getProfile(result: Result) {
     Log.d(TAG, "getProfile: starting GetLinkedInProfileActivity")
-    APIHelper.getInstance(mainActivity.applicationContext).getRequest(mainActivity, URL, object : ApiListener {
-      override fun onApiSuccess(apiResponse: ApiResponse) {
-        Log.d(FlutterLinkedinLoginPlugin.TAG, apiResponse.toString())
-        val response = apiResponse.responseDataAsJson
-        result.success(response.toString())
-      }
+    if (LISessionManager.getInstance(mainActivity.applicationContext).session.isValid) {
+      APIHelper.getInstance(mainActivity.applicationContext).getRequest(mainActivity, URL, object : ApiListener {
+        override fun onApiSuccess(apiResponse: ApiResponse) {
+          Log.d(FlutterLinkedinLoginPlugin.TAG, apiResponse.toString())
+          val response = apiResponse.responseDataAsJson
+          result.success(response.toString())
+        }
 
-      override fun onApiError(error: LIApiError) {
-        Log.e(FlutterLinkedinLoginPlugin.TAG, error.toString())
-        //Set access token is not set error type to http status code of unauthorized
-        val httpStatus = if (error.errorType == LIApiError.ErrorType.accessTokenIsNotSet) 401 else error.httpStatusCode
+        override fun onApiError(error: LIApiError) {
+          Log.e(FlutterLinkedinLoginPlugin.TAG, error.toString())
+          //Set access token is not set error type to http status code of unauthorized
+          val httpStatus = if (error.errorType == LIApiError.ErrorType.accessTokenIsNotSet) 401 else error.httpStatusCode
 
-        //If apiErrorResponse type, then get the message from the apiErrorResponse
-        val message = error.apiErrorResponse?.message ?: error.message
-        result.error(httpStatus.toString(), message, error.toString())
-      }
-    })
+          //If apiErrorResponse type, then get the message from the apiErrorResponse
+          val message = error.apiErrorResponse?.message ?: error.message
+          result.error(httpStatus.toString(), message, error.toString())
+        }
+      })
+    } else {
+      result.error("401", "access token is not set", null)
+    }
+
   }
 
   /**
