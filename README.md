@@ -16,6 +16,10 @@ LinkedIn's developer console for your changes to take.
 Open your MainActivity in your Android app/src/main/ directory and override the
 onActivityResult method with the following
 ```kotlin
+
+import android.content.Intent
+import io.tuantvu.flutterlinkedinlogin.FlutterLinkedinLoginPlugin
+
 //kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
   FlutterLinkedinLoginPlugin.onActivityResult(this, requestCode, resultCode, data)
@@ -23,6 +27,10 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 }
 ```
 ```java
+
+import android.content.Intent
+import io.tuantvu.flutterlinkedinlogin.FlutterLinkedinLoginPlugin
+
 //java
 @Override
 public void onActivityResult(int requestCode, int resultCode, Intent data) {
