@@ -23,15 +23,20 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
         //NSLog(@"%s","In method caller");
         if ([call.method isEqual: @"logIntoLinkedIn"]) {
             [self logIntoLinkedIn:result];
+        } else if ([call.method isEqual: @"logIntoLinkedInBasic"]) {
+            [self logIntoLinkedIn:result];
+        } else if ([call.method isEqual: @"logIntoLinkedInFull"]) {
+            [self logIntoLinkedIn:result];
         } else if ([call.method isEqual: @"getProfile"]) {
             [self getProfile:result];
         } else if ([call.method isEqual: @"clearSession"]) {
             [self clearSession:result];
+        } else if ([call.method isEqual: @"logout"]) {
+                    [self clearSession:result];
         } else {
             //NSLog(@"%s","method not implemented");
             result(FlutterMethodNotImplemented);
         }
-        
     }];
 }
 

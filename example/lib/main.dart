@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   _signInWithLinkedIn() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      String status = await FlutterLinkedinLogin.login;
+      String status = await FlutterLinkedinLogin.loginBasicProfile();
       setState(() {
         _loginStatus = status;
       });
@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   _getProfile() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      LinkedInProfile profile = await FlutterLinkedinLogin.profile;
+      LinkedInProfile profile = await FlutterLinkedinLogin.getProfile();
       debugPrint("profile: $profile");
       setState(() {
         _loginStatus = profile.firstName;
@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
 
   _clearSession() async {
     try {
-      String status = await FlutterLinkedinLogin.clearSession;
+      String status = await FlutterLinkedinLogin.logout();
       debugPrint("logout status: $status");
       setState(() {
         _loginStatus = status;
