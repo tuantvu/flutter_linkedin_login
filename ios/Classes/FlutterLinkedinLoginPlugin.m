@@ -45,7 +45,7 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
         result(@"Access token still valid");
     } else {
         [LISDKSessionManager
-         createSessionWithAuth:[NSArray arrayWithObjects:LISDK_BASIC_PROFILE_PERMISSION, nil]
+         createSessionWithAuth:[NSArray arrayWithObjects:LISDK_BASIC_PROFILE_PERMISSION, LISDK_EMAILADDRESS_PERMISSION, nil]
          state:nil
          showGoToAppStoreDialog:YES
          successBlock:^(NSString *returnState) {

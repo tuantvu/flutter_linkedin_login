@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  _clearSession() async {
+  _logout() async {
     _callPlatformService(() async {
       String status = await FlutterLinkedinLogin.logout();
       debugPrint("logout status: $status");
@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
                 child: new Text("Get Profile"),
               ),
               new RaisedButton(
-                onPressed: _clearSession,
+                onPressed: _logout,
                 child: new Text("Clear Session"),
               )
             ]
