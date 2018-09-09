@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   _signInWithLinkedIn() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      String status = await FlutterLinkedinLogin.loginBasicProfile();
+      String status = await FlutterLinkedinLogin.loginBasic();
       setState(() {
         _loginStatus = status;
       });
@@ -41,6 +41,8 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         _loginStatus = "code: ${e.code}, message: ${e.message}";
       });
+    } catch (error) {
+      debugPrint("error: $error");
     }
   }
 
@@ -66,24 +68,25 @@ class _MyAppState extends State<MyApp> {
         appBar: new AppBar(
           title: new Text('LinkedIn Login Plugin Example'),
         ),
-        body: new Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new Text('Login status: $_loginStatus\n'),
-            new RaisedButton(
-              onPressed: _signInWithLinkedIn,
-              child: new Text("Log into LinkedIn"),
-            ),
-            new RaisedButton(
-              onPressed: _getProfile,
-              child: new Text("Get Profile"),
-            ),
-            new RaisedButton(
-              onPressed: _clearSession,
-              child: new Text("Clear Session"),
-            )
-          ]
+        body: Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              new Text('Login status: $_loginStatus\n'),
+              new RaisedButton(
+                onPressed: () => _signInWithLinkedIn(),
+                child: new Text("Log into LinkedIn"),
+              ),
+              new RaisedButton(
+                onPressed: _getProfile,
+                child: new Text("Get Profile"),
+              ),
+              new RaisedButton(
+                onPressed: _clearSession,
+                child: new Text("Clear Session"),
+              )
+            ]
+          ),
         ),
       ),
     );

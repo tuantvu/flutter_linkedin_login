@@ -22,13 +22,21 @@ class FlutterLinkedinLogin {
     return new LinkedInProfile.fromJson(profile);
   }
 
-  static Future<String> loginBasicProfile() async {
-    return await _channel.invokeMethod('logIntoLinkedInBasic');
+  static Future<String> loginBasic() async {
+    return await _channel.invokeMethod('loginBasic');
   }
 
-  static Future<String> loginFullProfile() async {
-    return await _channel.invokeMethod('logIntoLinkedInFull');
+//  static Future<String> loginFull() async {
+//    return await _channel.invokeMethod('loginFull');
+//  }
+
+  static Future<String> loginBasicWithProfile() async {
+    return await _channel.invokeMethod('loginBasicWithProfile');
   }
+
+//  static Future<String> loginFullWithProfile() async {
+//    return await _channel.invokeMethod('loginFullWithProfile');
+//  }
 
   static Future<String> logout() async {
     return await _channel.invokeMethod("logout");
@@ -49,6 +57,9 @@ class LinkedInProfile {
   String pictureUrl;
   String summary;
   String industry;
+  String emailAddress;
+  String formattedName;
+  LinkedInLocation location;
 
   LinkedInProfile.fromJson(Map json) {
     this.firstName = json['firstName'];
@@ -58,6 +69,9 @@ class LinkedInProfile {
     this.pictureUrl = json['pictureUrl'];
     this.summary = json['summary'];
     this.industry = json['industry'];
+    this.emailAddress = json['emailAddress'];
+    this.formattedName = json['formattedName'];
+    this.location = LinkedInLocation.fromJson(json['location']);
   }
 
   Map<String, dynamic> toJson() {
@@ -69,12 +83,42 @@ class LinkedInProfile {
       'pictureUrl': pictureUrl,
       'summary': summary,
       'industry': industry,
+      'emailAddress': emailAddress,
+      'formattedName': formattedName,
+      'location': location.toJson(),
     };
   }
 
   @override
   String toString() {
-    return "id: $id, firstName: $firstName, lastName: $lastName, headline: $headline,"
-        " pictureUrl: $pictureUrl, industry: $industry, summary: $summary";
+    return 'LinkedInProfile{firstName: $firstName, lastName: $lastName, headline: $headline, id: $id, pictureUrl: $pictureUrl, summary: $summary, industry: $industry, emailAddress: $emailAddress, formattedName: $formattedName, location: $location}';
   }
+
+
+}
+
+class LinkedInLocation {
+  String countryCode;
+  String name;
+
+  LinkedInLocation.fromJson(Map json) {
+    if (json != null) {
+      this.countryCode = json['country'] != null ? json['country']['code'] : null;
+      this.name = json['name'];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'countryCode': countryCode,
+      'name': name,
+    };
+  }
+
+  @override
+  String toString() {
+    return 'LinkedInLocation{countryCode: $countryCode, name: $name}';
+  }
+
+
 }

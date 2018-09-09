@@ -28,7 +28,7 @@ import org.json.JSONObject
 class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCallHandler {
 
   private val URL = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name," +
-      "headline,industry,summary,picture-url)?format=json"
+      "headline,industry,summary,picture-url,email-address,formatted-name,location,specialties,positions)?format=json"
 
   companion object {
     //Result could not be passed around as a Parcelable or Serializable, so using a global static reference
@@ -61,9 +61,11 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
    */
   override fun onMethodCall(call: MethodCall, result: Result) {
     when {
-      call.method == "logIntoLinkedIn" -> logIntoLinkedIn(result)
-      call.method == "logIntoLinkedInBasic" -> logIntoLinkedIn(result)
-      call.method == "logIntoLinkedInFull" -> logIntoLinkedIn(result)
+      call.method == "logIntoLinkedIn" -> logIntoLinkedIn(Scope.R_BASICPROFILE, result)
+      call.method == "loginBasic" -> logIntoLinkedIn(Scope.R_BASICPROFILE, result)
+      call.method == "loginFull" -> logIntoLinkedIn(Scope.R_FULLPROFILE, result)
+      call.method == "loginBasicWithProfile" -> logIntoLinkedIn(Scope.R_BASICPROFILE, result)
+      call.method == "loginFullWithProfile" -> logIntoLinkedIn(Scope.R_FULLPROFILE, result)
       call.method == "getProfile" -> getProfile(result)
       call.method =="clearSession" -> clearSession(result)
       call.method =="logout" -> clearSession(result)
@@ -75,7 +77,8 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
    * Checks to see if the access token is still valid. If so, inits the session with
    * the token. If not, then starts the login process
    */
-  private fun logIntoLinkedIn(result: Result) {
+  private fun logIntoLinkedIn(profile: Scope.LIPermission, result: Result) {
+    Log.d(TAG, "logIntoLinkedIn: with profile: $profile")
     val sessionManager = LISessionManager.getInstance(mainActivity.applicationContext)
     if (sessionManager.session.isValid) {
       Log.d(TAG, "logIntoLinkedIn: Access token still valid")
@@ -85,10 +88,10 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
       Log.d(TAG, "logIntoLinkedIn: starting LinkedInActivity")
       LISessionManager.getInstance(mainActivity.applicationContext).init(
           mainActivity,
-          Scope.build(Scope.R_BASICPROFILE, Scope.R_EMAILADDRESS),
+          Scope.build(profile, Scope.R_EMAILADDRESS),
           object : AuthListener {
             override fun onAuthSuccess() {
-              Log.i(FlutterLinkedinLoginPlugin.TAG, "onAuthSuccess")
+              Log.i(TAG, "onAuthSuccess")
               result.success("Logged in")
             }
 
@@ -114,7 +117,7 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
     if (LISessionManager.getInstance(mainActivity.applicationContext).session.isValid) {
       APIHelper.getInstance(mainActivity.applicationContext).getRequest(mainActivity, URL, object : ApiListener {
         override fun onApiSuccess(apiResponse: ApiResponse) {
-          Log.d(FlutterLinkedinLoginPlugin.TAG, apiResponse.toString())
+          Log.d(TAG, "apiResponse: ${apiResponse.toString()}")
           val response = apiResponse.responseDataAsJson
           result.success(response.toString())
         }
