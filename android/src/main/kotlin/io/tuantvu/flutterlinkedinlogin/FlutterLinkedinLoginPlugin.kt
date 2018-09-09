@@ -61,13 +61,9 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
    */
   override fun onMethodCall(call: MethodCall, result: Result) {
     when {
-      call.method == "logIntoLinkedIn" -> logIntoLinkedIn(Scope.R_BASICPROFILE, result)
       call.method == "loginBasic" -> logIntoLinkedIn(Scope.R_BASICPROFILE, result)
       call.method == "loginFull" -> logIntoLinkedIn(Scope.R_FULLPROFILE, result)
-      call.method == "loginBasicWithProfile" -> logIntoLinkedIn(Scope.R_BASICPROFILE, result)
-      call.method == "loginFullWithProfile" -> logIntoLinkedIn(Scope.R_FULLPROFILE, result)
       call.method == "getProfile" -> getProfile(result)
-      call.method =="clearSession" -> clearSession(result)
       call.method =="logout" -> clearSession(result)
       else -> result.notImplemented()
     }

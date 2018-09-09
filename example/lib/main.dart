@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_linkedin_login/flutter_linkedin_login.dart';
@@ -9,33 +11,53 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => new _MyAppState();
 }
 
+typedef Future<void> FutureCallBack();
+
 class _MyAppState extends State<MyApp> {
   String _loginStatus = 'Press button to log in';
 
-
   _signInWithLinkedIn() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
+    _callPlatformService(() async {
       String status = await FlutterLinkedinLogin.loginBasic();
       setState(() {
         _loginStatus = status;
       });
-    } on PlatformException catch(e) {
-      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
-      setState(() {
-        _loginStatus = "code: ${e.code}, message: ${e.message}";
-      });
-    }
+    });
   }
 
   _getProfile() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
+    _callPlatformService(() async {
       LinkedInProfile profile = await FlutterLinkedinLogin.getProfile();
       debugPrint("profile: $profile");
       setState(() {
         _loginStatus = profile.firstName;
       });
+    });
+  }
+
+  _signInWithBasicProfile() async {
+    _callPlatformService(() async {
+      LinkedInProfile profile = await FlutterLinkedinLogin.loginBasicWithProfile();
+      debugPrint("profile: $profile");
+      setState(() {
+        _loginStatus = profile.firstName;
+      });
+    });
+  }
+
+  _clearSession() async {
+    _callPlatformService(() async {
+      String status = await FlutterLinkedinLogin.logout();
+      debugPrint("logout status: $status");
+      setState(() {
+        _loginStatus = status;
+      });
+    });
+  }
+
+  _callPlatformService(FutureCallBack callback) async {
+    try {
+      await callback();
     } on PlatformException catch(e) {
       debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
       setState(() {
@@ -43,21 +65,6 @@ class _MyAppState extends State<MyApp> {
       });
     } catch (error) {
       debugPrint("error: $error");
-    }
-  }
-
-  _clearSession() async {
-    try {
-      String status = await FlutterLinkedinLogin.logout();
-      debugPrint("logout status: $status");
-      setState(() {
-        _loginStatus = status;
-      });
-    } on PlatformException catch(e) {
-      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
-      setState(() {
-        _loginStatus = "code: ${e.code}, message: ${e.message}";
-      });
     }
   }
 
@@ -76,6 +83,10 @@ class _MyAppState extends State<MyApp> {
               new RaisedButton(
                 onPressed: () => _signInWithLinkedIn(),
                 child: new Text("Log into LinkedIn"),
+              ),
+              new RaisedButton(
+                onPressed: () => _signInWithBasicProfile(),
+                child: new Text("Log Basic with Profile"),
               ),
               new RaisedButton(
                 onPressed: _getProfile,

@@ -8,20 +8,6 @@ class FlutterLinkedinLogin {
   static const MethodChannel _channel =
       const MethodChannel('io.tuantvu.flutterlinkedinlogin/flutter_linkedin_login');
 
-  static Future<String> get login async {
-    return await _channel.invokeMethod('logIntoLinkedIn');
-  }
-
-  static Future<String> get clearSession async {
-    return await _channel.invokeMethod("clearSession");
-  }
-
-  static Future<LinkedInProfile> get profile async {
-    String response = await _channel.invokeMethod("getProfile");
-    Map profile = json.decode(response);
-    return new LinkedInProfile.fromJson(profile);
-  }
-
   static Future<String> loginBasic() async {
     return await _channel.invokeMethod('loginBasic');
   }
@@ -30,12 +16,14 @@ class FlutterLinkedinLogin {
 //    return await _channel.invokeMethod('loginFull');
 //  }
 
-  static Future<String> loginBasicWithProfile() async {
-    return await _channel.invokeMethod('loginBasicWithProfile');
+  static Future<LinkedInProfile> loginBasicWithProfile() async {
+    await loginBasic();
+    return await getProfile();
   }
 
-//  static Future<String> loginFullWithProfile() async {
-//    return await _channel.invokeMethod('loginFullWithProfile');
+//  static Future<LinkedInProfile> loginFullWithProfile() async {
+//    await loginFull();
+//    return await getProfile();
 //  }
 
   static Future<String> logout() async {
