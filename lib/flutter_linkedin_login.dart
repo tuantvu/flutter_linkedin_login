@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-export 'package:flutter_linkedin_login/linkedin-signin-button.dart';
+export 'package:flutter_linkedin_login/linkedin_signin_button.dart';
 
 ///Helper class to call platform channels for LinkedIn APIs
 class FlutterLinkedinLogin {
