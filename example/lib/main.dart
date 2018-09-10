@@ -84,10 +84,19 @@ class _MyAppState extends State<MyApp> {
                 onPressed: () => _signInWithLinkedIn(),
                 child: new Text("Log into LinkedIn"),
               ),
-              new RaisedButton(
-                onPressed: () => _signInWithBasicProfile(),
-                child: new Text("Log Basic with Profile"),
-              ),
+              new LinkedInSignInButton(onSignIn: (profile, ex) {
+                if (profile != null) {
+                  debugPrint("profile: $profile");
+                  setState(() {
+                    _loginStatus = profile.firstName;
+                  });
+                } else {
+                  debugPrint("exception: $ex");
+                  setState(() {
+                    _loginStatus = "code: ${ex.code}, message: ${ex.message}";
+                  });
+                }
+              },),
               new RaisedButton(
                 onPressed: _getProfile,
                 child: new Text("Get Profile"),
