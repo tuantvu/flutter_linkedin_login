@@ -65,68 +65,34 @@ override func application(_ app: UIApplication, open: URL, options: [UIApplicati
     return YES;
 }
 ```
-
 ## Usage
-### Signing in
-`FlutterLinkedInLogin.loginBasic()` will check if an access token is still valid on the device. If not,
-then it will proceed with LinkedIn's sign in process asking for basic profile. Login will throw exceptions with code detailed
-[here](https://developer.linkedin.com/docs/oauth2). A user can either cancel login or cancel authorization.
+See the [example](https://pub.dartlang.org/packages/flutter_linkedin_login#-example-tab-)
 
+### Methods
+Method | Description | Returns    
+------ | ----------- | -------    
+loginBasic() | Log in with basic profile | "Logged in" or "Access token still valid"
+getProfile() | Retrieves profile with whatever permissions were asked for during log in | LinkedInProfile         
+loginBasicWithProfile() | Convenience method that logs in with basic profile and returns the profile | LinkedInProfile
+logout() | Logs out | "Cleared session" or "No session"
+
+### Widgets
+Widget | Description | Render
+------ | ----------- | ------
+LinkedInSignInButton | Button that calls loginBasicWithProfile(). To get the profile, pass in argument `onSignIn: (profile, ex){...}` | ![Sign In with LinkedIn](./images/linkedin-button.png)
+
+### LinkedInProfile
 ```dart
-  _signInWithLinkedIn() async {
-    try {
-      String status = await FlutterLinkedinLogin.loginBasic();
-      debugPrint("login status: $status");
-    } on PlatformException catch(e) {
-      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
-    }
-  }
-```
-
-### Getting LinkedIn Profile
-`FlutterLinkedinLogin.getProfile()` will retrieve the user's basic profile which includes their 
-LinkedIn id, first name, last name, headline, industry, summary, pictureUrl, emailAddress, formattedName, and location. 
-Profile will communicate errors via http status codes as documented [here](https://developer.linkedin.com/docs/guide/v2/error-handling).
-
-```dart
-  _getProfile() async {
-    try {
-      LinkedInProfile profile = await FlutterLinkedinLogin.getProfile();
-      debugPrint("profile: $profile");
-    } on PlatformException catch(e) {
-      debugPrint("PlatformException httpStatusCode: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
-    }
-  }
-```
-
-For convenience, `FlutterLinkedinLogin.loginBasicWithProfile()` will sign the user in
-with basic profile and retrieve the profile.
-
-```dart
-  _signInWithBasicProfile() async {
-    try {
-      LinkedInProfile profile = await FlutterLinkedinLogin.loginBasicWithProfile();
-      debugPrint("profile: $profile");
-    } on PlatformException catch(e) {
-      debugPrint("PlatformException httpStatusCode: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
-    }
-  }
-```
-
-### Logging out
-`FlutterLinkedinLogin.logout()` clears the users access token, essentially logging them out. 
-Even if a token doesn't exist, clearSession will return a success with message 'No session', 
-therefore a PlatformException should never be thrown by clearSession.
-
-```dart
-  _logout() async {
-    try {
-      String status = await FlutterLinkedinLogin.logout();
-      debugPrint("logout status: $status");
-    } on PlatformException catch(e) { //This should never happen
-      debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
-    }
-  }
+  String firstName;
+  String lastName;
+  String headline;
+  String id;
+  String pictureUrl;
+  String summary;
+  String industry;
+  String emailAddress;
+  String formattedName;
+  LinkedInLocation location;
 ```
 
 ### Additional API calls

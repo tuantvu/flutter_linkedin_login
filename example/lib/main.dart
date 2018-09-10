@@ -35,16 +35,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  _signInWithBasicProfile() async {
-    _callPlatformService(() async {
-      LinkedInProfile profile = await FlutterLinkedinLogin.loginBasicWithProfile();
-      debugPrint("profile: $profile");
-      setState(() {
-        _loginStatus = profile.firstName;
-      });
-    });
-  }
-
   _logout() async {
     _callPlatformService(() async {
       String status = await FlutterLinkedinLogin.logout();
