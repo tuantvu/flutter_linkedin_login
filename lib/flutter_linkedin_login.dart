@@ -14,19 +14,10 @@ class FlutterLinkedinLogin {
     return await _channel.invokeMethod('loginBasic');
   }
 
-//  static Future<String> loginFull() async {
-//    return await _channel.invokeMethod('loginFull');
-//  }
-
   static Future<LinkedInProfile> loginBasicWithProfile() async {
     await loginBasic();
     return await getProfile();
   }
-
-//  static Future<LinkedInProfile> loginFullWithProfile() async {
-//    await loginFull();
-//    return await getProfile();
-//  }
 
   static Future<String> logout() async {
     return await _channel.invokeMethod("logout");
@@ -50,6 +41,7 @@ class LinkedInProfile {
   String emailAddress;
   String formattedName;
   LinkedInLocation location;
+  List<LinkedInPosition> positions;
 
   LinkedInProfile.fromJson(Map json) {
     this.firstName = json['firstName'];
@@ -62,6 +54,9 @@ class LinkedInProfile {
     this.emailAddress = json['emailAddress'];
     this.formattedName = json['formattedName'];
     this.location = LinkedInLocation.fromJson(json['location']);
+    if (json['positions'] != null && json['positions']['values'] != null) {
+      this.positions = parsePosition(json['positions']['values']);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -81,10 +76,16 @@ class LinkedInProfile {
 
   @override
   String toString() {
-    return 'LinkedInProfile{firstName: $firstName, lastName: $lastName, headline: $headline, id: $id, pictureUrl: $pictureUrl, summary: $summary, industry: $industry, emailAddress: $emailAddress, formattedName: $formattedName, location: $location}';
+    return 'LinkedInProfile{firstName: $firstName, lastName: $lastName, headline: $headline, id: $id, pictureUrl: $pictureUrl, summary: $summary, industry: $industry, emailAddress: $emailAddress, formattedName: $formattedName, location: $location, positions: $positions}';
   }
 
-
+  static List<LinkedInPosition> parsePosition(List<dynamic> json) {
+    var positions = <LinkedInPosition>[];
+    if (json != null) {
+      positions = json.map((positionJson) => LinkedInPosition.fromJson(positionJson)).toList();
+    }
+    return positions;
+  }
 }
 
 class LinkedInLocation {
@@ -109,6 +110,71 @@ class LinkedInLocation {
   String toString() {
     return 'LinkedInLocation{countryCode: $countryCode, name: $name}';
   }
+}
 
+class LinkedInDate {
+  int month;
+  int year;
 
+  LinkedInDate.fromJson(Map json) {
+    if (json != null) {
+      this.month = json['month'];
+      this.year = json['year'];
+    }
+  }
+
+  @override
+  String toString() {
+    return 'LinkedInDate{month: $month, year: $year}';
+  }
+}
+
+class LinkedInCompany {
+  int id;
+  String name;
+  String type;
+  String industry;
+  String ticker;
+
+  LinkedInCompany.fromJson(Map json) {
+    if (json != null) {
+      this.id = json['id'];
+      this.name = json['name'];
+      this.type = json['type'];
+      this.industry = json['industry'];
+      this.ticker = json['ticker'];
+    }
+  }
+
+  @override
+  String toString() {
+    return 'LinkedInCompany{id: $id, name: $name, type: $type, industry: $industry, ticker: $ticker}';
+  }
+}
+
+class LinkedInPosition {
+  int id;
+  String title;
+  String summary;
+  LinkedInDate startDate;
+  LinkedInDate endDate;
+  bool isCurrent;
+  LinkedInCompany company;
+
+  LinkedInPosition.fromJson(Map json) {
+    if (json != null) {
+      this.id = json['id'];
+      this.title = json['title'];
+      this.summary = json['summary'];
+      this.startDate = LinkedInDate.fromJson(json['startDate']);
+      this.endDate = LinkedInDate.fromJson(json['endDate']);
+      this.isCurrent = json['isCurrent'];
+      this.company = LinkedInCompany.fromJson(json['company']);
+    }
+  }
+
+  @override
+  String toString() {
+    return 'LinkedInPositions{id: $id, title: $title, summary: $summary, startDate: $startDate, endDate: $endDate, isCurrent: $isCurrent, company: $company}';
+  }
 }
