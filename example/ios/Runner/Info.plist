@@ -18,12 +18,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>li4877094</string>
+				<string>li[YourAppId]</string>
 			</array>
 		</dict>
 	</array>
 	<key>LIAppId</key>
-	<string>4877094</string>
+	<string>[YourAppId]</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
