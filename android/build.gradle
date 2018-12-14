@@ -2,7 +2,7 @@ group 'io.tuantvu.flutterlinkedinlogin'
 version '1.0.0'
 
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.71'
     repositories {
         google()
         jcenter()
