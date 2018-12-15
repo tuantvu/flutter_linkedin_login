@@ -14,11 +14,13 @@ class MyApp extends StatefulWidget {
 typedef Future<void> FutureCallBack();
 
 class _MyAppState extends State<MyApp> {
-  String _output = 'Press button to log in';
+  String _output = 'See output here';
+  int navIndex = 0;
 
   _signInWithLinkedIn() async {
     _callPlatformService(() async {
       String status = await FlutterLinkedinLogin.loginBasic();
+      debugPrint("_signInWithLinkedIn: $status");
       setState(() {
         _output = status;
       });
@@ -38,9 +40,19 @@ class _MyAppState extends State<MyApp> {
   _logout() async {
     _callPlatformService(() async {
       String status = await FlutterLinkedinLogin.logout();
-      debugPrint("logout status: $status");
+      debugPrint("_logout: $status");
       setState(() {
         _output = status;
+      });
+    });
+  }
+
+  _accessToken() async {
+    _callPlatformService(() async {
+      LinkedInAccessToken accessToken = await FlutterLinkedinLogin.accessToken();
+      debugPrint("_accessToken: $accessToken");
+      setState(() {
+        _output = accessToken.toString();
       });
     });
   }
@@ -67,23 +79,23 @@ class _MyAppState extends State<MyApp> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           fixedColor: Colors.black54,
+            currentIndex: navIndex,
             onTap: (index) {
               switch (index) {
                 case 0: _signInWithLinkedIn(); break;
                 case 1: _getProfile(); break;
-                case 2: _logout(); break;
+                case 2: _accessToken(); break;
+                case 3: _logout(); break;
               }
+              setState(() {
+                navIndex = index;
+              });
             },
             items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.accessibility), title: Text("Login"),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person), title: Text("Profile")
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.exit_to_app), title: Text("Logout")
-              )
+              navItem(iconData: Icons.accessibility, title: "Login"),
+              navItem(iconData: Icons.person, title: "Profile"),
+              navItem(iconData: Icons.vpn_key, title: "Token"),
+              navItem(iconData: Icons.exit_to_app, title: "Logout"),
             ]),
         body: Center(
           child: new ListView(
@@ -112,6 +124,13 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
+    );
+  }
+
+  BottomNavigationBarItem navItem({IconData iconData, String title}) {
+    return BottomNavigationBarItem(
+      icon: Icon(iconData, color: Colors.black54,),
+        title: Text(title, style: TextStyle(color: Colors.black54),),
     );
   }
 }

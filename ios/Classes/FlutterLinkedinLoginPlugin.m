@@ -26,7 +26,9 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
         } else if ([call.method isEqual: @"getProfile"]) {
             [self getProfile:result];
         } else if ([call.method isEqual: @"logout"]) {
-                    [self clearSession:result];
+            [self clearSession:result];
+        } else if ([call.method isEqual: @"accessToken"]) {
+            [self accessToken:result];
         } else {
             //NSLog(@"%s","method not implemented");
             result(FlutterMethodNotImplemented);
@@ -98,6 +100,19 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
  * Clears the access token from session
  */
 + (void)clearSession:(FlutterResult) result {
+    //NSLog(@"clearing session");
+    if ([LISDKSessionManager hasValidSession]) {
+        [LISDKSessionManager clearSession];
+        result(@"Cleared session");
+    } else {
+        result([FlutterError errorWithCode:@"401" message:@"access token is not set" details:nil]);
+    }
+}
+
+/**
+ * Returns the access token if it exists
+ */
++ (void)accessToken:(FlutterResult) result {
     //NSLog(@"clearing session");
     if ([LISDKSessionManager hasValidSession]) {
         [LISDKSessionManager clearSession];
