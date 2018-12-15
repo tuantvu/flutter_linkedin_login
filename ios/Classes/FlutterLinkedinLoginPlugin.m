@@ -1,7 +1,7 @@
 #import "FlutterLinkedinLoginPlugin.h"
 #import <linkedin-sdk/LISDK.h>
 
-NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,industry,summary,picture-url,email-address,formatted-name,location,specialties,positions)?format=json";
+NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,industry,summary,picture-url,email-address,formatted-name,location,specialties,positions,public-profile-url)?format=json";
 
 /**
  * FlutterLinkedInLoginPlugin handles login, clearing session, and getting basic user

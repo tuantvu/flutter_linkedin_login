@@ -28,7 +28,7 @@ import org.json.JSONObject
 class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCallHandler {
 
   private val URL = "https://api.linkedin.com/v1/people/~:(id,first-name,last-name," +
-      "headline,industry,summary,picture-url,email-address,formatted-name,location,specialties,positions)?format=json"
+      "headline,industry,summary,picture-url,email-address,formatted-name,location,specialties,positions,public-profile-url)?format=json"
 
   companion object {
     //Result could not be passed around as a Parcelable or Serializable, so using a global static reference

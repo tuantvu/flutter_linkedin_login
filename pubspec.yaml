@@ -1,6 +1,6 @@
 name: flutter_linkedin_login
 description: A Flutter plugin for allowing users to authenticate with LinkedIn and getting the user's basic profile
-version: 2.2.1
+version: 2.3.0
 author: Tuan Vu <tuantvu@gmail.com>
 homepage: https://github.com/tuantvu/flutter_linkedin_login
 

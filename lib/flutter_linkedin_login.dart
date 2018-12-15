@@ -42,6 +42,7 @@ class LinkedInProfile {
   String formattedName;
   LinkedInLocation location;
   List<LinkedInPosition> positions;
+  String publicProfileUrl;
 
   LinkedInProfile.fromJson(Map json) {
     this.firstName = json['firstName'];
@@ -57,6 +58,7 @@ class LinkedInProfile {
     if (json['positions'] != null && json['positions']['values'] != null) {
       this.positions = parsePosition(json['positions']['values']);
     }
+    this.publicProfileUrl = json['publicProfileUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -74,11 +76,6 @@ class LinkedInProfile {
     };
   }
 
-  @override
-  String toString() {
-    return 'LinkedInProfile{firstName: $firstName, lastName: $lastName, headline: $headline, id: $id, pictureUrl: $pictureUrl, summary: $summary, industry: $industry, emailAddress: $emailAddress, formattedName: $formattedName, location: $location, positions: $positions}';
-  }
-
   static List<LinkedInPosition> parsePosition(List<dynamic> json) {
     var positions = <LinkedInPosition>[];
     if (json != null) {
@@ -86,6 +83,24 @@ class LinkedInProfile {
     }
     return positions;
   }
+
+  @override
+  String toString() {
+    return 'firstName: $firstName, \n\n'
+        'lastName: $lastName, \n\n'
+        'headline: $headline, \n\n'
+        'emailAddress: $emailAddress, \n\n'
+        'formattedName: $formattedName, \n\n'
+        'id: $id, \n\n'
+        'publicProfileUrl: $publicProfileUrl, \n\n'
+        'pictureUrl: $pictureUrl, \n\n'
+        'industry: $industry, \n\n'
+        'location: $location, \n\n'
+        'summary: $summary, \n\n'
+        'positions: $positions,';
+  }
+
+
 }
 
 class LinkedInLocation {
@@ -160,6 +175,7 @@ class LinkedInPosition {
   LinkedInDate endDate;
   bool isCurrent;
   LinkedInCompany company;
+  LinkedInLocation location;
 
   LinkedInPosition.fromJson(Map json) {
     if (json != null) {
@@ -170,11 +186,14 @@ class LinkedInPosition {
       this.endDate = LinkedInDate.fromJson(json['endDate']);
       this.isCurrent = json['isCurrent'];
       this.company = LinkedInCompany.fromJson(json['company']);
+      this.location = LinkedInLocation.fromJson(json['location']);
     }
   }
 
   @override
   String toString() {
-    return 'LinkedInPositions{id: $id, title: $title, summary: $summary, startDate: $startDate, endDate: $endDate, isCurrent: $isCurrent, company: $company}';
+    return 'LinkedInPosition{id: $id, title: $title, summary: $summary, startDate: $startDate, endDate: $endDate, isCurrent: $isCurrent, company: $company, location: $location}';
   }
+
+
 }

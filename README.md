@@ -94,6 +94,7 @@ LinkedInSignInButton | Button that calls loginBasicWithProfile(). To get the pro
   String formattedName;
   LinkedInLocation location;
   List<LinkedInPosition> positions;
+  String publicProfileUrl;
 ```
 
 ### Additional API calls

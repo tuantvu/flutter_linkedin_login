@@ -14,13 +14,13 @@ class MyApp extends StatefulWidget {
 typedef Future<void> FutureCallBack();
 
 class _MyAppState extends State<MyApp> {
-  String _loginStatus = 'Press button to log in';
+  String _output = 'Press button to log in';
 
   _signInWithLinkedIn() async {
     _callPlatformService(() async {
       String status = await FlutterLinkedinLogin.loginBasic();
       setState(() {
-        _loginStatus = status;
+        _output = status;
       });
     });
   }
@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
       LinkedInProfile profile = await FlutterLinkedinLogin.getProfile();
       debugPrint("profile: $profile");
       setState(() {
-        _loginStatus = profile.firstName;
+        _output = profile.toString();
       });
     });
   }
@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
       String status = await FlutterLinkedinLogin.logout();
       debugPrint("logout status: $status");
       setState(() {
-        _loginStatus = status;
+        _output = status;
       });
     });
   }
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
     } on PlatformException catch(e) {
       debugPrint("PlatformException code: ${e.code}, message: ${e.message}, toString: ${e.toString()}");
       setState(() {
-        _loginStatus = "code: ${e.code}, message: ${e.message}";
+        _output = "code: ${e.code}, message: ${e.message}";
       });
     } catch (error) {
       debugPrint("error: $error");
@@ -65,36 +65,49 @@ class _MyAppState extends State<MyApp> {
         appBar: new AppBar(
           title: new Text('LinkedIn Login Plugin Example'),
         ),
-        body: Center(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              new Text('Login status: $_loginStatus\n'),
-              new RaisedButton(
-                onPressed: () => _signInWithLinkedIn(),
-                child: new Text("Log into LinkedIn"),
+        bottomNavigationBar: BottomNavigationBar(
+          fixedColor: Colors.black54,
+            onTap: (index) {
+              switch (index) {
+                case 0: _signInWithLinkedIn(); break;
+                case 1: _getProfile(); break;
+                case 2: _logout(); break;
+              }
+            },
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.accessibility), title: Text("Login"),
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person), title: Text("Profile")
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.exit_to_app), title: Text("Logout")
+              )
+            ]),
+        body: Center(
+          child: new ListView(
+            children: <Widget>[
               new LinkedInSignInButton(onSignIn: (profile, ex) {
                 if (profile != null) {
                   debugPrint("profile: $profile");
                   setState(() {
-                    _loginStatus = profile.firstName;
+                    _output = profile.firstName;
                   });
                 } else {
                   debugPrint("exception: $ex");
                   setState(() {
-                    _loginStatus = "code: ${ex.code}, message: ${ex.message}";
+                    _output = "code: ${ex.code}, message: ${ex.message}";
                   });
                 }
               },),
-              new RaisedButton(
-                onPressed: _getProfile,
-                child: new Text("Get Profile"),
+              Divider(height: 4.0,),
+              new Text('Output', textAlign: TextAlign.center, textScaleFactor: 1.5,),
+              SizedBox(height: 16.0,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new Text('$_output\n',),
               ),
-              new RaisedButton(
-                onPressed: _logout,
-                child: new Text("Clear Session"),
-              )
             ]
           ),
         ),
