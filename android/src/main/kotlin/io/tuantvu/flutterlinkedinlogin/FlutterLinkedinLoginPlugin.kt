@@ -65,6 +65,7 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
       call.method == "loginFull" -> logIntoLinkedIn(Scope.R_FULLPROFILE, result)
       call.method == "getProfile" -> getProfile(result)
       call.method =="logout" -> clearSession(result)
+      call.method =="accessToken" -> accessToken(result)
       else -> result.notImplemented()
     }
   }
@@ -148,5 +149,17 @@ class FlutterLinkedinLoginPlugin(private val mainActivity: Activity) : MethodCal
     }
   }
 
+  /**
+   * Returns the access token if it exists
+   */
+  private fun accessToken(result: Result) {
+    Log.d(TAG, "accessToken")
+    val sessionManager = LISessionManager.getInstance(mainActivity.applicationContext)
+    if (sessionManager.session.accessToken != null) {
+      result.success(sessionManager.session.accessToken.toString())
+    } else {
+      result.error("401", "access token is not set", null)
+    }
+  }
 
 }

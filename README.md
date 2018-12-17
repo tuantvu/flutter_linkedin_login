@@ -2,6 +2,13 @@
 
 A Flutter plugin for [Sign in with LinkedIn](https://developer.linkedin.com/docs/signin-with-linkedin)
 
+## IMPORTANT NOTICE
+LinkedIn is discontinuing their mobile SDKs, which this plugin depends on. iOS 12 seems to already be
+not working anymore. The LinkedIn app, doesn't ask for 3rd party app
+permissions like it used to. Support will end March 2019. The fate of this plugin is
+undetermined. It may be redesigned to use LinkedIn's OAuth 2.0 APIs. Stay tuned.
+See [https://engineering.linkedin.com/blog/2018/12/developer-program-updates]
+
 ## Installation
 See the [installation instructions on pub](https://pub.dartlang.org/packages/flutter_linkedin_login#-installing-tab-)
 
@@ -40,6 +47,8 @@ public void onActivityResult(int requestCode, int resultCode, Intent data) {
 ```
 
 ### iOS
+* May not work with iOS 12
+
 Follow the "Associate your iOS app with your LinkedIn app" section of LinkedIn's
 [Getting started with iOS](https://developer.linkedin.com/docs/ios-sdk). 
   
@@ -74,6 +83,7 @@ Method | Description | Returns
 loginBasic() | Log in with basic profile | "Logged in" or "Access token still valid"
 getProfile() | Retrieves profile with whatever permissions were asked for during log in | LinkedInProfile         
 loginBasicWithProfile() | Convenience method that logs in with basic profile and returns the profile | LinkedInProfile
+accessToken() | Returns current access token | LinkedInAccessToken
 logout() | Logs out | "Cleared session" or "No session"
 
 ### Widgets

@@ -23,6 +23,12 @@ class FlutterLinkedinLogin {
     return await _channel.invokeMethod("logout");
   }
 
+  static Future<LinkedInAccessToken> accessToken() async {
+    String response = await _channel.invokeMethod("accessToken");
+    Map accessToken = json.decode(response);
+    return new LinkedInAccessToken.fromJson(accessToken);
+  }
+
   static Future<LinkedInProfile> getProfile() async {
     String response = await _channel.invokeMethod("getProfile");
     Map profile = json.decode(response);
@@ -193,6 +199,23 @@ class LinkedInPosition {
   @override
   String toString() {
     return 'LinkedInPosition{id: $id, title: $title, summary: $summary, startDate: $startDate, endDate: $endDate, isCurrent: $isCurrent, company: $company, location: $location}';
+  }
+}
+
+class LinkedInAccessToken {
+  String accessTokenValue;
+  int expiresOn;
+
+  LinkedInAccessToken.fromJson(Map json) {
+    if (json != null) {
+      this.accessTokenValue = json['accessTokenValue'];
+      this.expiresOn = json['expiresOn'];
+    }
+  }
+
+  @override
+  String toString() {
+    return 'LinkedInAccessToken{accessTokenValue: $accessTokenValue, expiresOn: $expiresOn}';
   }
 
 
