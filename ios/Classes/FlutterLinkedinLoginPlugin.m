@@ -115,8 +115,8 @@ NSString *const URL = @"https://api.linkedin.com/v1/people/~:(id,first-name,last
 + (void)accessToken:(FlutterResult) result {
     //NSLog(@"clearing session");
     if ([LISDKSessionManager hasValidSession]) {
-        [LISDKSessionManager clearSession];
-        result(@"Cleared session");
+        LISDKAccessToken *accessToken = [LISDKSessionManager sharedInstance].session.accessToken;
+        result(accessToken.description );
     } else {
         result(@"No session");
     }
